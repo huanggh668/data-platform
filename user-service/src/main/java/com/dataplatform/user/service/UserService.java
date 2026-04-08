@@ -27,14 +27,14 @@ public class UserService {
     public User register(RegisterRequest request) {
         LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(User::getUsername, request.getUsername());
-        if (userRepository.exists(wrapper)) {
+        if (userRepository.selectCount(wrapper) > 0) {
             throw new RuntimeException("Username already exists");
         }
 
         if (request.getEmail() != null) {
             LambdaQueryWrapper<User> emailWrapper = new LambdaQueryWrapper<>();
             emailWrapper.eq(User::getEmail, request.getEmail());
-            if (userRepository.exists(emailWrapper)) {
+            if (userRepository.selectCount(emailWrapper) > 0) {
                 throw new RuntimeException("Email already exists");
             }
         }
@@ -107,7 +107,7 @@ public class UserService {
             LambdaQueryWrapper<User> emailWrapper = new LambdaQueryWrapper<>();
             emailWrapper.eq(User::getEmail, request.getEmail())
                     .ne(User::getId, userId);
-            if (userRepository.exists(emailWrapper)) {
+            if (userRepository.selectCount(emailWrapper) > 0) {
                 throw new RuntimeException("Email already exists");
             }
             user.setEmail(request.getEmail());
