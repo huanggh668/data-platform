@@ -13,6 +13,8 @@ spring:
         server-addr: ${NACOS_ADDR:192.168.70.197}:${NACOS_PORT:8848}
         namespace: ${NACOS_NAMESPACE:public}
         file-extension: yaml
+        import-check:
+          enabled: false
   datasource:
     url: jdbc:dm://${DB_HOST:192.168.70.197}:${DB_PORT:5236}/${DB_NAME:USER_SERVICE}
     username: ${DB_USER:SYSDBA}

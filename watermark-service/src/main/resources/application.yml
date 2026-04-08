@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: 8082
 
 spring:
   application:
@@ -7,13 +7,15 @@ spring:
   cloud:
     nacos:
       discovery:
-        server-addr: ${NACOS_SERVER:localhost:8848}
+        server-addr: ${NACOS_SERVER:192.168.70.197:8848}
         namespace: ${NACOS_NAMESPACE:public}
       config:
-        server-addr: ${NACOS_SERVER:localhost:8848}
+        server-addr: ${NACOS_SERVER:192.168.70.197:8848}
         namespace: ${NACOS_NAMESPACE:public}
         file-extension: yml
         refresh-enabled: true
+        import-check:
+          enabled: false
 
 management:
   endpoints:
