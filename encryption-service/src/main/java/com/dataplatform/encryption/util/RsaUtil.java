@@ -1,5 +1,6 @@
 package com.dataplatform.encryption.util;
 
+import javax.crypto.Cipher;
 import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;

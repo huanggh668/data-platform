@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.KeyPair;
 import java.util.List;
 
 @RestController
@@ -72,7 +73,7 @@ public class EncryptionController {
         String publicKey = null;
 
         if (request.getAlgorithm() == AlgorithmType.RSA) {
-            var keyPair = RsaUtil.generateKeyPair();
+            KeyPair keyPair = RsaUtil.generateKeyPair();
             privateKey = RsaUtil.getPrivateKeyBase64(keyPair);
             publicKey = RsaUtil.getPublicKeyBase64(keyPair);
             keyManagementService.storeKey(keyInfo.getKeyId(), AlgorithmType.RSA, privateKey);
