@@ -58,3 +58,4 @@ credentials.json
 charts/*/charts/
 charts/*/tmp/
 *.tgz
+push-to-github.bat
