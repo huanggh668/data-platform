@@ -1,0 +1,24 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: encryption-service
+  cloud:
+    nacos:
+      discovery:
+        enabled: true
+        server-addr: ${nacos.addr:192.168.70.197}:${nacos.port:8848}
+      config:
+        enabled: true
+        server-addr: ${nacos.addr:192.168.70.197}:${nacos.port:8848}
+        file-extension: yml
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      enabled: true

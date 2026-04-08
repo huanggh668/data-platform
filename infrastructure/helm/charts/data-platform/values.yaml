@@ -1,0 +1,59 @@
+global:
+  imageRegistry: "192.168.70.197:5000"
+  imagePullSecrets: []
+  storageClass: "local-path"
+
+nacos:
+  enabled: true
+  namespace: dataplatform
+  serviceName: nacos
+  replicas: 1
+  image: nacos/nacos-server:v2.2.3
+  port: 8848
+
+services:
+  user-service:
+    enabled: true
+    replicaCount: 2
+    image: "{{ .Values.global.imageRegistry }}/user-service:1.0.0"
+    port: 8080
+    
+  desensitization-service:
+    enabled: true
+    replicaCount: 2
+    image: "{{ .Values.global.imageRegistry }}/desensitization-service:1.0.0"
+    port: 8080
+    
+  watermark-service:
+    enabled: true
+    replicaCount: 2
+    image: "{{ .Values.global.imageRegistry }}/watermark-service:1.0.0"
+    port: 8080
+    
+  encryption-service:
+    enabled: true
+    replicaCount: 2
+    image: "{{ .Values.global.imageRegistry }}/encryption-service:1.0.0"
+    port: 8080
+
+ingress:
+  enabled: true
+  className: "traefik"
+  host: "dataplatform.local"
+  tls:
+    enabled: false
+    secretName: "dataplatform-tls"
+
+resources:
+  limits:
+    cpu: 1000m
+    memory: 1Gi
+  requests:
+    cpu: 500m
+    memory: 512Mi
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

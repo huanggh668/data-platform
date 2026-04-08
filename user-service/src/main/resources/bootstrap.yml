@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: user-service
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 192.168.70.197:8848
+        namespace: public
+      config:
+        server-addr: 192.168.70.197:8848
+        namespace: public
+        file-extension: yaml
+        shared-dataids: common.yaml
+        refreshable-dataids: common.yaml

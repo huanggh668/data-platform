@@ -1,0 +1,54 @@
+replicaCount: {{ .Values.replicaCount | default 2 }}
+
+image:
+  repository: {{ .Values.image | default "192.168.70.197:5000/user-service" }}
+  tag: "1.0.0"
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: {{ .Values.port | default 8080 }}
+  targetPort: 8080
+
+ingress:
+  enabled: {{ .Values.ingress.enabled | default true }}
+  className: traefik
+  host: {{ .Values.ingress.host | default "user-service.dataplatform.local" }}
+  path: /
+  pathType: Prefix
+
+resources:
+  limits:
+    cpu: 500m
+    memory: 512Mi
+  requests:
+    cpu: 250m
+    memory: 256Mi
+
+livenessProbe:
+  httpGet:
+    path: /actuator/health
+    port: 8080
+  initialDelaySeconds: 60
+  periodSeconds: 10
+
+readinessProbe:
+  httpGet:
+    path: /actuator/health
+    port: 8080
+  initialDelaySeconds: 30
+  periodSeconds: 5
+
+env:
+  - name: SPRING_PROFILES_ACTIVE
+    value: {{ .Values.profile | default "prod" }}
+  - name: NACOS_SERVER_ADDR
+    value: {{ .Values.nacos.addr | default "192.168.70.197" }}
+  - name: NACOS_SERVER_PORT
+    value: {{ .Values.nacos.port | default "8848" }}
+  - name: SPRING_DATASOURCE_URL
+    value: {{ .Values.database.url | default "jdbc:mysql://192.168.70.197:45432/userdb" }}
+  - name: SPRING_DATASOURCE_USERNAME
+    value: {{ .Values.database.username | default "toolbox" }}
+  - name: SPRING_DATASOURCE_PASSWORD
+    value: {{ .Values.database.password | default "vLkmcChDJpu0QM8sOKz8" }}

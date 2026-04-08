@@ -1,0 +1,15 @@
+replicaCount: 2
+image:
+  repository: 192.168.70.197:5000/encryption-service
+  tag: "1.0.0"
+  pullPolicy: IfNotPresent
+service:
+  type: ClusterIP
+  port: 8080
+ingress:
+  enabled: true
+  className: traefik
+  host: encryption-service.dataplatform.local
+nacos:
+  addr: 192.168.70.197
+  port: "8848"

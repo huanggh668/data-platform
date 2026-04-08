@@ -1,0 +1,6 @@
+apiVersion: v2
+name: common
+description: Common Helm templates for Data Platform
+type: library
+version: 1.0.0
+appVersion: 1.0.0

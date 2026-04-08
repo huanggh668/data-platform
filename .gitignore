@@ -1,0 +1,60 @@
+# Java
+target/
+*.class
+*.jar
+*.war
+*.ear
+*.logs
+*.log
+
+# Maven
+.mvn/
+mvnw
+mvnw.cmd
+!.mvn/wrapper/maven-wrapper.jar
+
+# IDE
+.idea/
+*.iml
+.vscode/
+*.swp
+*.swo
+.DS_Store
+
+# Node
+node_modules/
+dist/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Admin UI
+admin-ui/node_modules/
+admin-ui/dist/
+
+# Docker
+.docker/
+
+# K8s
+*.kubeconfig
+.kube/
+
+# Logs
+logs/
+*.log
+
+# Temp files
+*.tmp
+*.bak
+*.orig
+
+# Sensitive
+.env
+*.local
+credentials.json
+
+# Helm
+charts/*/charts/
+charts/*/tmp/
+*.tgz

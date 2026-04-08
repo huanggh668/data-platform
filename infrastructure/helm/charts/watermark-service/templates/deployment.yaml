@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: watermark-service
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: watermark-service
+  template:
+    metadata:
+      labels:
+        app: watermark-service
+    spec:
+      containers:
+        - name: watermark-service
+          image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+          ports:
+            - containerPort: {{ .Values.service.port }}
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: prod
+            - name: NACOS_SERVER_ADDR
+              value: {{ .Values.nacos.addr }}
+            - name: NACOS_SERVER_PORT
+              value: {{ .Values.nacos.port }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: watermark-service
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+  selector:
+    app: watermark-service

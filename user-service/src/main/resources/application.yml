@@ -1,0 +1,49 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: user-service
+  cloud:
+    nacos:
+      discovery:
+        server-addr: ${NACOS_ADDR:192.168.70.197}:${NACOS_PORT:8848}
+        namespace: ${NACOS_NAMESPACE:public}
+      config:
+        server-addr: ${NACOS_ADDR:192.168.70.197}:${NACOS_PORT:8848}
+        namespace: ${NACOS_NAMESPACE:public}
+        file-extension: yaml
+  datasource:
+    url: jdbc:dm://${DB_HOST:192.168.70.197}:${DB_PORT:5236}/${DB_NAME:USER_SERVICE}
+    username: ${DB_USER:SYSDBA}
+    password: ${DB_PASSWORD:vLkmcChDJpu0QM8sOKz8}
+    driver-class-name: dm.jdbc.driver.DmDriver
+  redis:
+    host: ${REDIS_HOST:192.168.70.197}
+    port: ${REDIS_PORT:6379}
+
+mybatis-plus:
+  mapper-locations: classpath*:/mapper/**/*.xml
+  type-aliases-package: com.dataplatform.user.entity
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    db-config:
+      logic-delete-field: deleted
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+
+jwt:
+  secret: ${JWT_SECRET:dGhpcyBpcyBhIHZlcnkgbG9uZyBzZWNyZXQga2V5IGZvciBqd3QgdG9rZW4gZ2VuZXJhdGlvbiBhbmQgdmFsaWRhdGlvbg==}
+  expiration: ${JWT_EXPIRATION:3600}
+  refreshExpiration: ${JWT_REFRESH_EXPIRATION:604800}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: always
