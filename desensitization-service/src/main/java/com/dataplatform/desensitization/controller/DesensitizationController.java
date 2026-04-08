@@ -4,6 +4,7 @@ import com.dataplatform.desensitization.dto.BatchDesensitizeRequest;
 import com.dataplatform.desensitization.dto.BatchDesensitizeResponse;
 import com.dataplatform.desensitization.dto.DesensitizeRequest;
 import com.dataplatform.desensitization.dto.DesensitizeResponse;
+import com.dataplatform.desensitization.entity.DesensitizationLog;
 import com.dataplatform.desensitization.model.DetectionResult;
 import com.dataplatform.desensitization.service.DesensitizationService;
 import com.dataplatform.desensitization.service.SensitiveDataDetector;
@@ -61,5 +62,26 @@ public class DesensitizationController {
             }
         }
         return ResponseEntity.ok(new BatchDesensitizeResponse(results));
+    }
+
+    @GetMapping("/logs")
+    public ResponseEntity<List<DesensitizationLog>> queryLogs(
+            @RequestParam(required = false) String dataType) {
+        List<DesensitizationLog> logs;
+        if (dataType != null && !dataType.isEmpty()) {
+            logs = desensitizationService.queryLogsByDataType(dataType);
+        } else {
+            logs = desensitizationService.queryLogs(1, 100);
+        }
+        return ResponseEntity.ok(logs);
+    }
+
+    @GetMapping("/logs/{id}")
+    public ResponseEntity<DesensitizationLog> getLogById(@PathVariable Long id) {
+        DesensitizationLog log = desensitizationService.getLogById(id);
+        if (log == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(log);
     }
 }

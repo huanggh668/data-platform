@@ -2,6 +2,7 @@ package com.dataplatform.watermark.controller;
 
 import com.dataplatform.watermark.dto.*;
 import com.dataplatform.watermark.model.WatermarkData;
+import com.dataplatform.watermark.model.WatermarkRecord;
 import com.dataplatform.watermark.model.WatermarkResult;
 import com.dataplatform.watermark.model.WatermarkVerificationResult;
 import com.dataplatform.watermark.service.WatermarkService;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.Base64;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/watermark")
@@ -90,6 +92,21 @@ public class WatermarkController {
                 .build();
         
         return ResponseEntity.ok(response);
+    }
+    
+    @GetMapping("/records")
+    public ResponseEntity<List<WatermarkRecord>> queryWatermarkRecords(@RequestParam(required = false) Long userId) {
+        List<WatermarkRecord> records = watermarkService.queryWatermarkRecords(userId);
+        return ResponseEntity.ok(records);
+    }
+    
+    @GetMapping("/records/{id}")
+    public ResponseEntity<WatermarkRecord> getWatermarkRecordById(@PathVariable Long id) {
+        WatermarkRecord record = watermarkService.queryWatermarkRecordById(id);
+        if (record == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(record);
     }
     
 }

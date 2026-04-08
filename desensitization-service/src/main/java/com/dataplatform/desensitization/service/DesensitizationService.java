@@ -1,20 +1,25 @@
 package com.dataplatform.desensitization.service;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.dataplatform.desensitization.entity.DesensitizationLog;
+import com.dataplatform.desensitization.mapper.DesensitizationLogMapper;
 import com.dataplatform.desensitization.model.DesensitizationRule;
 import com.dataplatform.desensitization.model.DetectionResult;
 import com.dataplatform.desensitization.model.SensitiveType;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class DesensitizationService {
 
     private final SensitiveDataDetector detector;
-
-    private static final Map<SensitiveType, DesensitizationRule> DEFAULT_RULES = new HashMap<>();
+    private final DesensitizationLogMapper desensitizationLogMapper;
 
     static {
         DEFAULT_RULES.put(SensitiveType.PHONE, new DesensitizationRule(SensitiveType.PHONE, 3, 4, '*'));
@@ -23,28 +28,31 @@ public class DesensitizationService {
         DEFAULT_RULES.put(SensitiveType.EMAIL, new DesensitizationRule(SensitiveType.EMAIL, 1, 0, '*'));
     }
 
-    public DesensitizationService(SensitiveDataDetector detector) {
-        this.detector = detector;
-    }
-
     public String desensitize(String value, SensitiveType type) {
         if (value == null || value.isEmpty()) {
             return value;
         }
+        String maskedValue;
         switch (type) {
             case PHONE:
-                return desensitizePhone(value);
+                maskedValue = desensitizePhone(value);
+                break;
             case ID_CARD:
-                return desensitizeIdCard(value);
+                maskedValue = desensitizeIdCard(value);
+                break;
             case BANK_CARD:
-                return desensitizeBankCard(value);
+                maskedValue = desensitizeBankCard(value);
+                break;
             case EMAIL:
-                return desensitizeEmail(value);
+                maskedValue = desensitizeEmail(value);
+                break;
             case ADDRESS:
             case NAME:
             default:
-                return maskAll(value);
+                maskedValue = maskAll(value);
         }
+        saveLog(type.name(), value, maskedValue, "DESENSITIZE");
+        return maskedValue;
     }
 
     public String desensitizePhone(String phone) {
@@ -147,5 +155,31 @@ public class DesensitizationService {
             sb.append('*');
         }
         return sb.toString();
+    }
+
+    private void saveLog(String dataType, String originalValue, String maskedValue, String operationType) {
+        DesensitizationLog log = new DesensitizationLog();
+        log.setDataType(dataType);
+        log.setOriginalValue(originalValue);
+        log.setMaskedValue(maskedValue);
+        log.setOperationType(operationType);
+        desensitizationLogMapper.insert(log);
+    }
+
+    public List<DesensitizationLog> queryLogs(int page, int size) {
+        LambdaQueryWrapper<DesensitizationLog> wrapper = new LambdaQueryWrapper<>();
+        wrapper.orderByDesc(DesensitizationLog::getCreatedAt);
+        return desensitizationLogMapper.selectList(wrapper);
+    }
+
+    public DesensitizationLog getLogById(Long id) {
+        return desensitizationLogMapper.selectById(id);
+    }
+
+    public List<DesensitizationLog> queryLogsByDataType(String dataType) {
+        LambdaQueryWrapper<DesensitizationLog> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(DesensitizationLog::getDataType, dataType)
+                .orderByDesc(DesensitizationLog::getCreatedAt);
+        return desensitizationLogMapper.selectList(wrapper);
     }
 }

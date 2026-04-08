@@ -1,6 +1,8 @@
 package com.dataplatform.encryption.controller;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.dataplatform.encryption.dto.*;
+import com.dataplatform.encryption.entity.EncryptionLog;
 import com.dataplatform.encryption.model.AlgorithmType;
 import com.dataplatform.encryption.model.KeyInfo;
 import com.dataplatform.encryption.service.EncryptionService;
@@ -105,6 +107,23 @@ public class EncryptionController {
         return ResponseEntity.ok(KeyListResponse.builder()
                 .keys(keys)
                 .build());
+    }
+
+    @GetMapping("/logs")
+    public ResponseEntity<Page<EncryptionLog>> queryLogs(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Page<EncryptionLog> logs = encryptionService.queryLogs(page, size);
+        return ResponseEntity.ok(logs);
+    }
+
+    @GetMapping("/logs/{id}")
+    public ResponseEntity<EncryptionLog> getLogById(@PathVariable Long id) {
+        EncryptionLog log = encryptionService.getLogById(id);
+        if (log == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(log);
     }
 
     @GetMapping("/actuator/health")
