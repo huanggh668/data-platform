@@ -16,10 +16,16 @@ spring:
         import-check:
           enabled: false
   datasource:
-    url: jdbc:dm://${DB_HOST:192.168.70.197}:${DB_PORT:5236}/${DB_NAME:USER_SERVICE}
-    username: ${DB_USER:SYSDBA}
-    password: ${DB_PASSWORD:vLkmcChDJpu0QM8sOKz8}
-    driver-class-name: dm.jdbc.driver.DmDriver
+    url: jdbc:h2:mem:userdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;MODE=MySQL
+    username: ${DB_USER:sa}
+    password: ${DB_PASSWORD:}
+    driver-class-name: org.h2.Driver
+  h2:
+    console:
+      enabled: true
+  sql:
+    init:
+      mode: always
   redis:
     host: ${REDIS_HOST:192.168.70.197}
     port: ${REDIS_PORT:6379}
