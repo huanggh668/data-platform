@@ -16,12 +16,12 @@ spring:
         import-check:
           enabled: false
   datasource:
-    url: jdbc:dm://${DB_HOST:192.168.70.197}:${DB_PORT:5236}/${DB_NAME:USER_SERVICE}
+    url: jdbc:dm://${DB_HOST:dmdb.dataplatform.svc.cluster.local}:${DB_PORT:5236}/${DB_NAME:USER_SERVICE}
     username: ${DB_USER:SYSDBA}
     password: ${DB_PASSWORD:vLkmcChDJpu0QM8sOKz8}
     driver-class-name: dm.jdbc.driver.DmDriver
   redis:
-    host: ${REDIS_HOST:192.168.70.197}
+    host: ${REDIS_HOST:redis.dataplatform.svc.cluster.local}
     port: ${REDIS_PORT:6379}
 
 mybatis-plus:
