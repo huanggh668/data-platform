@@ -11,7 +11,7 @@ import org.springframework.context.annotation.ComponentScan;
 @EnableDiscoveryClient
 @EnableFeignClients
 @ComponentScan(basePackages = {"com.dataplatform.user", "com.dataplatform.common"})
-@MapperScan("com.dataplatform.user.repository")
+@MapperScan({"com.dataplatform.user.mapper", "com.dataplatform.user.repository"})
 public class UserServiceApplication {
     public static void main(String[] args) {
         SpringApplication.run(UserServiceApplication.class, args);
