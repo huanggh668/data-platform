@@ -1,22 +1,22 @@
 import axios from 'axios'
 
 const userService = axios.create({
-  baseURL: 'http://192.168.70.197:8080',
+  baseURL: 'http://192.168.70.197:32451',
   timeout: 10000
 })
 
 const desensitizeService = axios.create({
-  baseURL: 'http://192.168.70.197:8081',
+  baseURL: 'http://192.168.70.197:30281',
   timeout: 10000
 })
 
 const watermarkService = axios.create({
-  baseURL: 'http://192.168.70.197:8082',
+  baseURL: 'http://192.168.70.197:31494',
   timeout: 10000
 })
 
 const encryptionService = axios.create({
-  baseURL: 'http://192.168.70.197:8083',
+  baseURL: 'http://192.168.70.197:31154',
   timeout: 10000
 })
 
@@ -51,7 +51,14 @@ const user = {
   getProfile: () => userService.get('/api/v1/users/profile'),
   register: (username, password, email) => userService.post('/api/v1/users/register', { username, password, email }),
   getUsers: () => userService.get('/api/v1/users'),
-  toggleUser: (userId, enabled) => userService.put(`/api/v1/users/${userId}`, { enabled })
+  /** 创建用户（管理员） */
+  createUser: (data) => userService.post('/api/v1/users/admin/create', data),
+  /** 更新用户信息和角色（管理员） */
+  updateUser: (userId, data) => userService.put(`/api/v1/users/${userId}`, data),
+  /** 软删除用户（管理员） */
+  deleteUser: (userId) => userService.delete(`/api/v1/users/${userId}`),
+  /** 启用/禁用用户（管理员） */
+  toggleUser: (userId, status) => userService.put(`/api/v1/users/${userId}/toggle`, { status })
 }
 
 const desensitize = {

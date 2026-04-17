@@ -1,7 +1,7 @@
 <template>
   <div class="page-container">
     <div class="page-header">
-      <h2>Desensitization Management</h2>
+      <h2>{{ $t('nav.desensitization') }}</h2>
     </div>
 
     <el-row :gutter="20">
@@ -9,46 +9,46 @@
         <el-card>
           <template #header>
             <div class="card-header">
-              <span>Rule Configuration</span>
-              <el-button type="primary" size="small" @click="addRule">Add Rule</el-button>
+              <span>规则配置</span>
+              <el-button type="primary" size="small" @click="addRule">添加规则</el-button>
             </div>
           </template>
           <el-table :data="rules" stripe>
-            <el-table-column prop="type" label="Type" width="120" />
-            <el-table-column prop="pattern" label="Pattern" />
-            <el-table-column prop="replacement" label="Replacement" width="150" />
-            <el-table-column label="Actions" width="120">
+            <el-table-column prop="type" label="类型" width="120" />
+            <el-table-column prop="pattern" label="匹配模式" />
+            <el-table-column prop="replacement" label="替换规则" width="150" />
+            <el-table-column label="操作" width="80">
               <template #default="{ row }">
-                <el-button type="danger" size="small" @click="deleteRule(row)">Delete</el-button>
+                <el-button type="danger" size="small" @click="deleteRule(row)">删除</el-button>
               </template>
             </el-table-column>
           </el-table>
         </el-card>
       </el-col>
-      
+
       <el-col :span="10">
         <el-card class="test-card">
           <template #header>
-            <span>Test Desensitization</span>
+            <span>脱敏测试</span>
           </template>
           <el-form :model="testForm" label-width="80px">
-            <el-form-item label="Type">
-              <el-select v-model="testForm.type" placeholder="Select type">
-                <el-option label="Phone" value="phone" />
-                <el-option label="Email" value="email" />
-                <el-option label="ID Card" value="idcard" />
-                <el-option label="Custom" value="custom" />
+            <el-form-item label="类型">
+              <el-select v-model="testForm.type" placeholder="请选择类型">
+                <el-option label="手机号" value="phone" />
+                <el-option label="邮箱" value="email" />
+                <el-option label="身份证" value="idcard" />
+                <el-option label="自定义" value="custom" />
               </el-select>
             </el-form-item>
-            <el-form-item label="Input">
-              <el-input v-model="testForm.input" type="textarea" :rows="3" placeholder="Enter value to desensitize" />
+            <el-form-item label="输入">
+              <el-input v-model="testForm.input" type="textarea" :rows="3" placeholder="请输入待脱敏的数据" />
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" :loading="testing" @click="testDesensitize">Test</el-button>
+              <el-button type="primary" :loading="testing" @click="testDesensitize">测试</el-button>
             </el-form-item>
           </el-form>
           <div v-if="testResult" class="test-result">
-            <div class="test-result-label">Result:</div>
+            <div class="test-result-label">结果：</div>
             <div class="test-result-content">{{ testResult }}</div>
           </div>
         </el-card>
@@ -58,24 +58,24 @@
     <el-card class="batch-card">
       <template #header>
         <div class="card-header">
-          <span>Batch Desensitize</span>
-          <el-button type="success" size="small" @click="showBatchDialog = true">Upload File</el-button>
+          <span>批量脱敏</span>
+          <el-button type="success" size="small" @click="showBatchDialog = true">上传文件</el-button>
         </div>
       </template>
-      <p class="batch-tip">Upload a CSV or JSON file to batch desensitize data</p>
+      <p class="batch-tip">上传 CSV 或 JSON 文件以批量对数据进行脱敏处理</p>
     </el-card>
 
-    <el-dialog v-model="showBatchDialog" title="Batch Desensitize" width="500px">
-      <el-form :model="batchForm" label-width="100px">
-        <el-form-item label="Type">
-          <el-select v-model="batchForm.type" placeholder="Select type">
-            <el-option label="Phone" value="phone" />
-            <el-option label="Email" value="email" />
-            <el-option label="ID Card" value="idcard" />
-            <el-option label="Auto Detect" value="auto" />
+    <el-dialog v-model="showBatchDialog" title="批量脱敏" width="500px">
+      <el-form :model="batchForm" label-width="80px">
+        <el-form-item label="类型">
+          <el-select v-model="batchForm.type" placeholder="请选择类型">
+            <el-option label="手机号" value="phone" />
+            <el-option label="邮箱" value="email" />
+            <el-option label="身份证" value="idcard" />
+            <el-option label="自动检测" value="auto" />
           </el-select>
         </el-form-item>
-        <el-form-item label="File">
+        <el-form-item label="文件">
           <el-upload
             ref="uploadRef"
             :auto-upload="false"
@@ -83,16 +83,16 @@
             accept=".csv,.json"
             :on-change="handleFileChange"
           >
-            <el-button>Select File</el-button>
+            <el-button>选择文件</el-button>
             <template #tip>
-              <div class="el-upload__tip">CSV or JSON files</div>
+              <div class="el-upload__tip">支持 CSV 或 JSON 格式</div>
             </template>
           </el-upload>
         </el-form-item>
       </el-form>
       <template #footer>
-        <el-button @click="showBatchDialog = false">Cancel</el-button>
-        <el-button type="primary" :loading="uploading" @click="uploadBatch">Upload</el-button>
+        <el-button @click="showBatchDialog = false">取消</el-button>
+        <el-button type="primary" :loading="uploading" @click="uploadBatch">上传</el-button>
       </template>
     </el-dialog>
   </div>
@@ -126,7 +126,7 @@ const batchForm = reactive({
 
 async function testDesensitize() {
   if (!testForm.input) {
-    ElMessage.warning('Please enter input value')
+    ElMessage.warning('请输入待脱敏的数据')
     return
   }
   testing.value = true
@@ -160,7 +160,7 @@ function handleFileChange(file) {
 
 async function uploadBatch() {
   if (!batchForm.file) {
-    ElMessage.warning('Please select a file')
+    ElMessage.warning('请先选择文件')
     return
   }
   uploading.value = true
@@ -169,7 +169,7 @@ async function uploadBatch() {
     formData.append('file', batchForm.file)
     formData.append('type', batchForm.type)
     await api.desensitize.batchDesensitize(formData)
-    ElMessage.success('File uploaded successfully')
+    ElMessage.success('文件上传成功')
     showBatchDialog.value = false
   } catch (error) {
     ElMessage.error(error.message)
@@ -198,5 +198,23 @@ async function uploadBatch() {
   color: #909399;
   font-size: 14px;
   margin: 0;
+}
+
+.test-result {
+  margin-top: 16px;
+  padding: 12px;
+  background: #f5f7fa;
+  border-radius: 4px;
+}
+
+.test-result-label {
+  font-size: 13px;
+  color: #606266;
+  margin-bottom: 6px;
+}
+
+.test-result-content {
+  font-size: 14px;
+  word-break: break-all;
 }
 </style>

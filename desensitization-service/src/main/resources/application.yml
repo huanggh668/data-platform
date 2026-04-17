@@ -16,9 +16,9 @@ spring:
         import-check:
           enabled: false
   datasource:
-    url: jdbc:dm://127.0.0.1:5236
-    username: SYSDBA
-    password: SYSDBA
+    url: jdbc:dm://${DB_HOST:192.168.70.197}:${DB_PORT:5236}
+    username: ${DB_USER:SYSDBA}
+    password: ${DB_PASSWORD:SYSDBA}
     driver-class-name: dm.jdbc.driver.DmDriver
 
 mybatis-plus:

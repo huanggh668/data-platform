@@ -105,7 +105,14 @@
                 <version>${dm.version}</version>
             </dependency>
 
-            <!-- Project modules -->
+            <!-- springdoc OpenAPI (Swagger UI) -->
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-ui</artifactId>
+            <version>1.7.0</version>
+        </dependency>
+
+        <!-- Project modules -->
             <dependency>
                 <groupId>com.dataplatform</groupId>
                 <artifactId>data-platform-common</artifactId>

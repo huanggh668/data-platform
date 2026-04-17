@@ -3,6 +3,8 @@ package com.dataplatform.desensitization;
 import com.dataplatform.desensitization.model.SensitiveType;
 import com.dataplatform.desensitization.service.DesensitizationService;
 import com.dataplatform.desensitization.service.SensitiveDataDetector;
+import com.dataplatform.desensitization.mapper.DesensitizationLogMapper;
+import org.mockito.Mockito;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -19,7 +21,7 @@ class DesensitizationServiceTest {
     @BeforeEach
     void setUp() {
         detector = new SensitiveDataDetector();
-        desensitizationService = new DesensitizationService(detector);
+        desensitizationService = new DesensitizationService(detector, Mockito.mock(DesensitizationLogMapper.class));
     }
 
     @Test

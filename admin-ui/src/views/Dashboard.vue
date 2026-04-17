@@ -1,9 +1,9 @@
 <template>
   <div class="page-container">
     <div class="page-header">
-      <h2>Dashboard</h2>
+      <h2>{{ $t('nav.dashboard') }}</h2>
     </div>
-    
+
     <div class="card-grid">
       <el-card class="status-card" v-for="service in services" :key="service.name">
         <template #header>
@@ -13,7 +13,7 @@
           </div>
         </template>
         <div class="service-content">
-          <div class="service-status">{{ service.online ? 'Online' : 'Offline' }}</div>
+          <div class="service-status">{{ service.online ? '在线' : '离线' }}</div>
           <div class="service-detail">{{ service.detail }}</div>
         </div>
       </el-card>
@@ -24,21 +24,21 @@
         <el-card class="quick-actions-card">
           <template #header>
             <div class="card-header">
-              <span>Quick Actions</span>
+              <span>快捷入口</span>
             </div>
           </template>
           <div class="quick-actions">
             <el-button type="primary" @click="$router.push('/desensitize')">
               <el-icon><Hide /></el-icon>
-              Desensitization
+              数据脱敏
             </el-button>
             <el-button type="success" @click="$router.push('/watermark')">
               <el-icon><Picture /></el-icon>
-              Watermark
+              数字水印
             </el-button>
             <el-button type="warning" @click="$router.push('/encryption')">
               <el-icon><Lock /></el-icon>
-              Encryption
+              数据加密
             </el-button>
           </div>
         </el-card>
@@ -47,7 +47,7 @@
         <el-card class="activity-card">
           <template #header>
             <div class="card-header">
-              <span>Recent Activity</span>
+              <span>最近动态</span>
             </div>
           </template>
           <el-timeline>
@@ -74,17 +74,17 @@ import { ref } from 'vue'
 import { Hide, Picture, Lock } from '@element-plus/icons-vue'
 
 const services = ref([
-  { name: 'User Service', online: true, detail: 'Port 8080' },
-  { name: 'Desensitization', online: true, detail: 'Port 8081' },
-  { name: 'Watermark Service', online: true, detail: 'Port 8082' },
-  { name: 'Encryption Service', online: true, detail: 'Port 8083' }
+  { name: '用户服务', online: true, detail: '端口 8080' },
+  { name: '脱敏服务', online: true, detail: '端口 8081' },
+  { name: '水印服务', online: true, detail: '端口 8082' },
+  { name: '加密服务', online: true, detail: '端口 8083' }
 ])
 
 const activities = ref([
-  { id: 1, title: 'User Login', description: 'Admin logged in successfully', timestamp: '2024-01-15 10:30:00' },
-  { id: 2, title: 'Desensitization Rule Updated', description: 'Rule for phone numbers was modified', timestamp: '2024-01-15 09:15:00' },
-  { id: 3, title: 'Encryption Key Generated', description: 'New AES-256 key created', timestamp: '2024-01-14 16:45:00' },
-  { id: 4, title: 'Watermark Embedded', description: 'Text watermark embedded successfully', timestamp: '2024-01-14 14:20:00' }
+  { id: 1, title: '用户登录', description: '管理员登录成功', timestamp: '2024-01-15 10:30:00' },
+  { id: 2, title: '脱敏规则更新', description: '手机号脱敏规则已修改', timestamp: '2024-01-15 09:15:00' },
+  { id: 3, title: '加密密钥生成', description: '新的 AES-256 密钥已创建', timestamp: '2024-01-14 16:45:00' },
+  { id: 4, title: '水印嵌入', description: '文本水印嵌入成功', timestamp: '2024-01-14 14:20:00' }
 ])
 </script>
 

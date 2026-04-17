@@ -5,18 +5,18 @@ spring:
   application:
     name: encryption-service
   datasource:
-    url: jdbc:dm://127.0.0.1:5236
-    username: SYSDBA
-    password: SYSDBA
+    url: jdbc:dm://${DB_HOST:192.168.70.197}:${DB_PORT:5236}
+    username: ${DB_USER:SYSDBA}
+    password: ${DB_PASSWORD:SYSDBA}
     driver-class-name: dm.jdbc.driver.DmDriver
   cloud:
     nacos:
       discovery:
         enabled: true
-        server-addr: ${nacos.addr:192.168.70.197}:${nacos.port:8848}
+        server-addr: ${NACOS_SERVER:192.168.70.197:8848}
       config:
         enabled: true
-        server-addr: ${nacos.addr:192.168.70.197}:${nacos.port:8848}
+        server-addr: ${NACOS_SERVER:192.168.70.197:8848}
         file-extension: yml
         import-check:
           enabled: false

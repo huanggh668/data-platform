@@ -1,11 +1,11 @@
-replicaCount: 2
+replicaCount: 1
 image:
   repository: 192.168.70.197:5000/encryption-service
   tag: "1.0.0"
   pullPolicy: IfNotPresent
 service:
   type: ClusterIP
-  port: 8080
+  port: 8083
 ingress:
   enabled: true
   className: traefik

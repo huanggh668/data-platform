@@ -2,14 +2,14 @@
   <div class="login-container">
     <div class="login-box">
       <div class="login-header">
-        <h1>Data Platform</h1>
-        <p>Admin Console</p>
+        <h1>{{ $t('login.title') }}</h1>
+        <p>{{ currentLocale === 'zh' ? '管理控制台' : 'Admin Console' }}</p>
       </div>
       <el-form ref="loginFormRef" :model="loginForm" :rules="rules" class="login-form">
         <el-form-item prop="username">
           <el-input
             v-model="loginForm.username"
-            placeholder="Username"
+            :placeholder="$t('login.username')"
             prefix-icon="User"
             size="large"
           />
@@ -18,7 +18,7 @@
           <el-input
             v-model="loginForm.password"
             type="password"
-            placeholder="Password"
+            :placeholder="$t('login.password')"
             prefix-icon="Lock"
             size="large"
             @keyup.enter="handleLogin"
@@ -32,10 +32,16 @@
             class="login-button"
             @click="handleLogin"
           >
-            Login
+            {{ $t('login.login') }}
           </el-button>
         </el-form-item>
       </el-form>
+      <!-- 语言切换 -->
+      <div class="lang-switch">
+        <el-button text size="small" @click="toggleLocale">
+          {{ currentLocale === 'zh' ? 'English' : '中文' }}
+        </el-button>
+      </div>
     </div>
   </div>
 </template>
@@ -44,41 +50,47 @@
 import { ref, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
+import { useI18n } from 'vue-i18n'
 import { ElMessage } from 'element-plus'
 
 const router = useRouter()
 const authStore = useAuthStore()
+const { t, locale } = useI18n()
 
 const loginFormRef = ref(null)
 const loading = ref(false)
+const currentLocale = ref(locale.value)
 
-const loginForm = reactive({
-  username: '',
-  password: ''
-})
+const loginForm = reactive({ username: '', password: '' })
 
 const rules = {
-  username: [{ required: true, message: 'Please enter username', trigger: 'blur' }],
-  password: [{ required: true, message: 'Please enter password', trigger: 'blur' }]
+  username: [{ required: true, message: () => t('login.username') + ' required', trigger: 'blur' }],
+  password: [{ required: true, message: () => t('login.password') + ' required', trigger: 'blur' }]
 }
 
 async function handleLogin() {
   if (!loginFormRef.value) return
-  
   await loginFormRef.value.validate(async (valid) => {
     if (valid) {
       loading.value = true
       try {
         await authStore.login(loginForm.username, loginForm.password)
-        ElMessage.success('Login successful')
+        ElMessage.success(t('login.loginSuccess'))
         router.push('/dashboard')
       } catch (error) {
-        ElMessage.error(error.message || 'Login failed')
+        ElMessage.error(error.message || t('login.loginFailed'))
       } finally {
         loading.value = false
       }
     }
   })
+}
+
+function toggleLocale() {
+  const next = locale.value === 'zh' ? 'en' : 'zh'
+  locale.value = next
+  currentLocale.value = next
+  localStorage.setItem('locale', next)
 }
 </script>
 
@@ -125,5 +137,10 @@ async function handleLogin() {
 .login-button {
   width: 100%;
   font-size: 16px;
+}
+
+.lang-switch {
+  text-align: center;
+  margin-top: 12px;
 }
 </style>

@@ -6,9 +6,9 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-@TableName("t_user")
+@TableName("users")
 public class User {
-    @TableId(type = IdType.AUTO)
+    @TableId(type = IdType.ASSIGN_ID)
     private Long id;
 
     private String username;
@@ -21,6 +21,9 @@ public class User {
 
     @TableField("status")
     private Integer status;
+
+    /** 用户角色：admin=管理员，user=普通用户 */
+    private String role;
 
     @TableField("last_login_at")
     private LocalDateTime lastLoginAt;

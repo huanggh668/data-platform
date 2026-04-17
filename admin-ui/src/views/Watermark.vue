@@ -1,32 +1,32 @@
 <template>
   <div class="page-container">
     <div class="page-header">
-      <h2>Watermark Management</h2>
+      <h2>{{ $t('nav.watermark') }}</h2>
     </div>
 
     <el-row :gutter="20">
       <el-col :span="12">
         <el-card class="config-card">
           <template #header>
-            <span>Watermark Configuration</span>
+            <span>水印配置</span>
           </template>
-          <el-form :model="config" label-width="100px">
-            <el-form-item label="Type">
+          <el-form :model="config" label-width="80px">
+            <el-form-item label="类型">
               <el-radio-group v-model="config.type">
-                <el-radio label="text">Text</el-radio>
-                <el-radio label="image">Image</el-radio>
+                <el-radio label="text">文本</el-radio>
+                <el-radio label="image">图片</el-radio>
               </el-radio-group>
             </el-form-item>
-            <el-form-item label="Strength">
+            <el-form-item label="强度">
               <el-slider v-model="config.strength" :min="1" :max="100" show-input />
             </el-form-item>
-            <el-form-item label="Position">
-              <el-select v-model="config.position" placeholder="Select position">
-                <el-option label="Center" value="center" />
-                <el-option label="Top-Left" value="top-left" />
-                <el-option label="Top-Right" value="top-right" />
-                <el-option label="Bottom-Left" value="bottom-left" />
-                <el-option label="Bottom-Right" value="bottom-right" />
+            <el-form-item label="位置">
+              <el-select v-model="config.position" placeholder="请选择位置">
+                <el-option label="居中" value="center" />
+                <el-option label="左上" value="top-left" />
+                <el-option label="右上" value="top-right" />
+                <el-option label="左下" value="bottom-left" />
+                <el-option label="右下" value="bottom-right" />
               </el-select>
             </el-form-item>
           </el-form>
@@ -36,30 +36,30 @@
       <el-col :span="12">
         <el-card class="embed-card">
           <template #header>
-            <span>Embed Watermark</span>
+            <span>嵌入水印</span>
           </template>
           <el-tabs v-model="activeTab">
-            <el-tab-pane label="Text Watermark" name="text">
-              <el-form :model="textForm" label-width="100px">
-                <el-form-item label="Text">
-                  <el-input v-model="textForm.text" placeholder="Enter watermark text" />
+            <el-tab-pane label="文本水印" name="text">
+              <el-form :model="textForm" label-width="80px">
+                <el-form-item label="水印文本">
+                  <el-input v-model="textForm.text" placeholder="请输入水印文本" />
                 </el-form-item>
-                <el-form-item label="User ID">
-                  <el-input v-model="textForm.userId" placeholder="Enter user ID" />
+                <el-form-item label="用户 ID">
+                  <el-input v-model="textForm.userId" placeholder="请输入用户 ID" />
                 </el-form-item>
                 <el-form-item>
-                  <el-button type="primary" :loading="embedding" @click="embedTextWatermark">Embed</el-button>
+                  <el-button type="primary" :loading="embedding" @click="embedTextWatermark">嵌入</el-button>
                 </el-form-item>
               </el-form>
               <div v-if="textResult" class="test-result">
-                <div class="test-result-label">Result:</div>
+                <div class="test-result-label">结果：</div>
                 <div class="test-result-content">{{ textResult }}</div>
               </div>
             </el-tab-pane>
 
-            <el-tab-pane label="Image Watermark" name="image">
-              <el-form :model="imageForm" label-width="100px">
-                <el-form-item label="Image">
+            <el-tab-pane label="图片水印" name="image">
+              <el-form :model="imageForm" label-width="80px">
+                <el-form-item label="图片">
                   <el-upload
                     ref="imageUploadRef"
                     :auto-upload="false"
@@ -67,14 +67,14 @@
                     accept="image/*"
                     :on-change="handleImageChange"
                   >
-                    <el-button>Select Image</el-button>
+                    <el-button>选择图片</el-button>
                   </el-upload>
                 </el-form-item>
-                <el-form-item label="User ID">
-                  <el-input v-model="imageForm.userId" placeholder="Enter user ID" />
+                <el-form-item label="用户 ID">
+                  <el-input v-model="imageForm.userId" placeholder="请输入用户 ID" />
                 </el-form-item>
                 <el-form-item>
-                  <el-button type="primary" :loading="embedding" @click="embedImageWatermark">Embed</el-button>
+                  <el-button type="primary" :loading="embedding" @click="embedImageWatermark">嵌入</el-button>
                 </el-form-item>
               </el-form>
             </el-tab-pane>
@@ -85,18 +85,18 @@
 
     <el-card class="verify-card">
       <template #header>
-        <span>Verify Watermark</span>
+        <span>验证水印</span>
       </template>
       <el-form :model="verifyForm" inline>
-        <el-form-item label="Content">
-          <el-input v-model="verifyForm.content" placeholder="Enter content or upload file" style="width: 300px" />
+        <el-form-item label="内容">
+          <el-input v-model="verifyForm.content" placeholder="请输入内容或上传文件" style="width: 300px" />
         </el-form-item>
         <el-form-item>
-          <el-button type="success" :loading="verifying" @click="verifyWatermark">Verify</el-button>
+          <el-button type="success" :loading="verifying" @click="verifyWatermark">验证</el-button>
         </el-form-item>
       </el-form>
       <div v-if="verifyResult" class="test-result">
-        <div class="test-result-label">Verification Result:</div>
+        <div class="test-result-label">验证结果：</div>
         <div class="test-result-content">{{ verifyResult }}</div>
       </div>
     </el-card>
@@ -137,7 +137,7 @@ const verifying = ref(false)
 
 async function embedTextWatermark() {
   if (!textForm.text || !textForm.userId) {
-    ElMessage.warning('Please enter text and user ID')
+    ElMessage.warning('请输入水印文本和用户 ID')
     return
   }
   embedding.value = true
@@ -148,8 +148,8 @@ async function embedTextWatermark() {
       strength: config.strength,
       position: config.position
     })
-    textResult.value = response.result || 'Watermark embedded successfully'
-    ElMessage.success('Watermark embedded successfully')
+    textResult.value = response.result || '水印嵌入成功'
+    ElMessage.success('水印嵌入成功')
   } catch (error) {
     ElMessage.error(error.message)
   } finally {
@@ -163,7 +163,7 @@ function handleImageChange(file) {
 
 async function embedImageWatermark() {
   if (!imageForm.image || !imageForm.userId) {
-    ElMessage.warning('Please select image and enter user ID')
+    ElMessage.warning('请选择图片并输入用户 ID')
     return
   }
   embedding.value = true
@@ -174,7 +174,7 @@ async function embedImageWatermark() {
     formData.append('strength', config.strength)
     formData.append('position', config.position)
     await api.watermark.embedImage(formData)
-    ElMessage.success('Image watermark embedded successfully')
+    ElMessage.success('图片水印嵌入成功')
   } catch (error) {
     ElMessage.error(error.message)
   } finally {
@@ -184,7 +184,7 @@ async function embedImageWatermark() {
 
 async function verifyWatermark() {
   if (!verifyForm.content) {
-    ElMessage.warning('Please enter content to verify')
+    ElMessage.warning('请输入待验证的内容')
     return
   }
   verifying.value = true
@@ -192,9 +192,9 @@ async function verifyWatermark() {
     const response = await api.watermark.verify({
       content: verifyForm.content
     })
-    verifyResult.value = response.exists ? `Watermark found - User ID: ${response.userId}` : 'No watermark found'
+    verifyResult.value = response.exists ? `检测到水印 - 用户 ID：${response.userId}` : '未检测到水印'
   } catch (error) {
-    verifyResult.value = 'Verification failed: ' + error.message
+    verifyResult.value = '验证失败：' + error.message
   } finally {
     verifying.value = false
   }
@@ -209,5 +209,23 @@ async function verifyWatermark() {
 
 .verify-card {
   margin-top: 20px;
+}
+
+.test-result {
+  margin-top: 16px;
+  padding: 12px;
+  background: #f5f7fa;
+  border-radius: 4px;
+}
+
+.test-result-label {
+  font-size: 13px;
+  color: #606266;
+  margin-bottom: 6px;
+}
+
+.test-result-content {
+  font-size: 14px;
+  word-break: break-all;
 }
 </style>

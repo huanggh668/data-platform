@@ -15,9 +15,13 @@ export const useAuthStore = defineStore('auth', () => {
     try {
       const response = await api.user.login(username, password)
       token.value = response.token
-      user.value = response.user
+      // Login response now includes user object directly
+      const userObj = response.user || null
+      user.value = userObj
       localStorage.setItem('token', response.token)
-      localStorage.setItem('user', JSON.stringify(response.user))
+      if (userObj) {
+        localStorage.setItem('user', JSON.stringify(userObj))
+      }
       return response
     } finally {
       loading.value = false

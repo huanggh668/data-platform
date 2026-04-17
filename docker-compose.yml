@@ -9,12 +9,22 @@ services:
       - "443:443"
     volumes:
       - ./infrastructure/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
-      - ./admin-ui/dist:/usr/share/nginx/html:ro
     depends_on:
+      - admin-ui
       - user-service
       - desensitization-service
       - watermark-service
       - encryption-service
+    networks:
+      - dataplatform
+    restart: unless-stopped
+
+  admin-ui:
+    build:
+      context: ./admin-ui
+      dockerfile: Dockerfile
+    image: 192.168.70.197:5000/admin-ui:1.0.0
+    container_name: admin-ui
     networks:
       - dataplatform
     restart: unless-stopped
@@ -49,7 +59,7 @@ services:
     container_name: user-service
     environment:
       - SPRING_PROFILES_ACTIVE=prod
-      - NACOS_ADDR=192.168.70.197
+      - NACOS_ADDR=nacos
       - NACOS_PORT=8848
       - DB_HOST=192.168.70.197
       - DB_PORT=5236
@@ -74,10 +84,15 @@ services:
     container_name: desensitization-service
     environment:
       - SPRING_PROFILES_ACTIVE=prod
-      - NACOS_ADDR=192.168.70.197
+      - NACOS_ADDR=nacos
       - NACOS_PORT=8848
+      - NACOS_SERVER=nacos:8848
+      - DB_HOST=192.168.70.197
+      - DB_PORT=5236
+      - DB_USER=SYSDBA
+      - DB_PASSWORD=vLkmcChDJpu0QM8sOKz8
     ports:
-      - "8081:8080"
+      - "8081:8081"
     depends_on:
       - nacos
     networks:
@@ -92,10 +107,15 @@ services:
     container_name: watermark-service
     environment:
       - SPRING_PROFILES_ACTIVE=prod
-      - NACOS_ADDR=192.168.70.197
+      - NACOS_ADDR=nacos
       - NACOS_PORT=8848
+      - NACOS_SERVER=nacos:8848
+      - DB_HOST=192.168.70.197
+      - DB_PORT=5236
+      - DB_USER=SYSDBA
+      - DB_PASSWORD=vLkmcChDJpu0QM8sOKz8
     ports:
-      - "8082:8080"
+      - "8082:8082"
     depends_on:
       - nacos
     networks:
@@ -110,10 +130,15 @@ services:
     container_name: encryption-service
     environment:
       - SPRING_PROFILES_ACTIVE=prod
-      - NACOS_ADDR=192.168.70.197
+      - NACOS_ADDR=nacos
       - NACOS_PORT=8848
+      - NACOS_SERVER=nacos:8848
+      - DB_HOST=192.168.70.197
+      - DB_PORT=5236
+      - DB_USER=SYSDBA
+      - DB_PASSWORD=vLkmcChDJpu0QM8sOKz8
     ports:
-      - "8083:8080"
+      - "8083:8083"
     depends_on:
       - nacos
     networks:

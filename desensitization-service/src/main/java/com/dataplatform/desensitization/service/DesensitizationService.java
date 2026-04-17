@@ -21,6 +21,8 @@ public class DesensitizationService {
     private final SensitiveDataDetector detector;
     private final DesensitizationLogMapper desensitizationLogMapper;
 
+    private static final Map<SensitiveType, DesensitizationRule> DEFAULT_RULES = new HashMap<>();
+
     static {
         DEFAULT_RULES.put(SensitiveType.PHONE, new DesensitizationRule(SensitiveType.PHONE, 3, 4, '*'));
         DEFAULT_RULES.put(SensitiveType.ID_CARD, new DesensitizationRule(SensitiveType.ID_CARD, 6, 3, '*'));

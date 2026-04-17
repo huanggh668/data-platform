@@ -2,7 +2,7 @@
   <div v-if="isAuthenticated && route.path !== '/login'" class="app-container">
     <aside class="sidebar">
       <div class="logo">
-        <h1>Data Platform</h1>
+        <h1>{{ $t('login.title') }}</h1>
       </div>
       <el-menu
         :default-active="route.path"
@@ -11,26 +11,48 @@
         text-color="#bfcbd9"
         active-text-color="#409EFF"
         router
+        unique-opened
       >
         <el-menu-item index="/dashboard">
           <el-icon><HomeFilled /></el-icon>
-          <span>Dashboard</span>
+          <span>{{ $t('nav.dashboard') }}</span>
         </el-menu-item>
-        <el-menu-item index="/desensitize">
-          <el-icon><Hide /></el-icon>
-          <span>Desensitization</span>
-        </el-menu-item>
-        <el-menu-item index="/watermark">
-          <el-icon><Picture /></el-icon>
-          <span>Watermark</span>
-        </el-menu-item>
-        <el-menu-item index="/encryption">
-          <el-icon><Lock /></el-icon>
-          <span>Encryption</span>
-        </el-menu-item>
+
+        <el-sub-menu index="/desensitize">
+          <template #title>
+            <el-icon><Hide /></el-icon>
+            <span>{{ $t('nav.desensitization') }}</span>
+          </template>
+          <el-menu-item index="/desensitize">概览</el-menu-item>
+          <el-menu-item index="/desensitize/rules">规则管理</el-menu-item>
+          <el-menu-item index="/desensitize/jobs">任务管理</el-menu-item>
+          <el-menu-item index="/desensitize/datasources">数据源</el-menu-item>
+        </el-sub-menu>
+
+        <el-sub-menu index="/watermark">
+          <template #title>
+            <el-icon><Picture /></el-icon>
+            <span>{{ $t('nav.watermark') }}</span>
+          </template>
+          <el-menu-item index="/watermark">概览</el-menu-item>
+          <el-menu-item index="/watermark/factors">水印因子</el-menu-item>
+          <el-menu-item index="/watermark/jobs">任务管理</el-menu-item>
+          <el-menu-item index="/watermark/traceability">溯源记录</el-menu-item>
+        </el-sub-menu>
+
+        <el-sub-menu index="/encryption">
+          <template #title>
+            <el-icon><Lock /></el-icon>
+            <span>{{ $t('nav.encryption') }}</span>
+          </template>
+          <el-menu-item index="/encryption">概览</el-menu-item>
+          <el-menu-item index="/encryption/algorithms">算法管理</el-menu-item>
+          <el-menu-item index="/encryption/jobs">任务管理</el-menu-item>
+        </el-sub-menu>
+
         <el-menu-item v-if="isAdmin" index="/users">
           <el-icon><User /></el-icon>
-          <span>Users</span>
+          <span>{{ $t('nav.users') }}</span>
         </el-menu-item>
       </el-menu>
     </aside>
@@ -40,6 +62,17 @@
           <h3>{{ pageTitle }}</h3>
         </div>
         <div class="header-right">
+          <!-- 语言切换按钮 -->
+          <el-button
+            size="small"
+            text
+            @click="toggleLocale"
+            class="lang-btn"
+            :title="$t('language.switch')"
+          >
+            {{ currentLocale === 'zh' ? 'EN' : '中文' }}
+          </el-button>
+
           <el-dropdown @command="handleCommand">
             <span class="user-info">
               <el-icon><User /></el-icon>
@@ -48,7 +81,7 @@
             </span>
             <template #dropdown>
               <el-dropdown-menu>
-                <el-dropdown-item command="logout">Logout</el-dropdown-item>
+                <el-dropdown-item command="logout">{{ $t('common.confirm') === '确认' ? '退出登录' : 'Logout' }}</el-dropdown-item>
               </el-dropdown-menu>
             </template>
           </el-dropdown>
@@ -63,29 +96,42 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useAuthStore } from './stores/auth'
+import { useI18n } from 'vue-i18n'
 import { HomeFilled, Hide, Picture, Lock, User, ArrowDown } from '@element-plus/icons-vue'
 
 const route = useRoute()
 const router = useRouter()
 const authStore = useAuthStore()
+const { t, locale } = useI18n()
 
 const isAuthenticated = computed(() => authStore.isAuthenticated)
 const isAdmin = computed(() => authStore.isAdmin)
 const user = computed(() => authStore.user)
+const currentLocale = ref(locale.value)
 
 const pageTitle = computed(() => {
   const titles = {
-    '/dashboard': 'Dashboard',
-    '/desensitize': 'Desensitization Management',
-    '/watermark': 'Watermark Management',
-    '/encryption': 'Encryption Management',
-    '/users': 'User Management'
+    '/dashboard': t('nav.dashboard'),
+    '/desensitize': t('nav.desensitization'),
+    '/watermark': t('nav.watermark'),
+    '/encryption': t('nav.encryption'),
+    '/users': t('nav.users'),
   }
-  return titles[route.path] || 'Data Platform'
+  return titles[route.path] || t('login.title')
 })
+
+/**
+ * 切换中英文 — 状态保存到 localStorage 供下次启动使用
+ */
+function toggleLocale() {
+  const next = locale.value === 'zh' ? 'en' : 'zh'
+  locale.value = next
+  currentLocale.value = next
+  localStorage.setItem('locale', next)
+}
 
 function handleCommand(command) {
   if (command === 'logout') {
@@ -150,6 +196,26 @@ function handleCommand(command) {
   font-size: 18px;
   font-weight: 500;
   color: #303133;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.lang-btn {
+  font-size: 13px;
+  color: #606266;
+  border: 1px solid #dcdfe6;
+  border-radius: 4px;
+  padding: 4px 10px;
+  cursor: pointer;
+}
+
+.lang-btn:hover {
+  color: #409eff;
+  border-color: #409eff;
 }
 
 .user-info {

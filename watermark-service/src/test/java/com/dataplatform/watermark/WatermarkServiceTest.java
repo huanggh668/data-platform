@@ -6,6 +6,8 @@ import com.dataplatform.watermark.model.WatermarkData;
 import com.dataplatform.watermark.model.WatermarkResult;
 import com.dataplatform.watermark.model.WatermarkVerificationResult;
 import com.dataplatform.watermark.service.WatermarkService;
+import com.dataplatform.watermark.mapper.WatermarkRecordMapper;
+import org.mockito.Mockito;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -24,7 +26,7 @@ class WatermarkServiceTest {
     void setUp() {
         TextWatermarkAlgorithm textAlgorithm = new TextWatermarkAlgorithm();
         ImageWatermarkAlgorithm imageAlgorithm = new ImageWatermarkAlgorithm();
-        watermarkService = new WatermarkService(textAlgorithm, imageAlgorithm);
+        watermarkService = new WatermarkService(textAlgorithm, imageAlgorithm, Mockito.mock(WatermarkRecordMapper.class));
     }
     
     @Test
